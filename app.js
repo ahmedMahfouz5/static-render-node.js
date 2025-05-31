@@ -161,6 +161,11 @@ const privateKey = fs.readFileSync("server.key", "utf8");
 const certificate = fs.readFileSync("server.cert", "utf8");
 
 const PORT = process.env.PORT;
+
+.listen(PORT, () => {
+        console.log("Server running on https://localhost:", PORT);
+      });
+
 /*mongoose
   .connect(mongodb_URL)
 
@@ -168,9 +173,7 @@ const PORT = process.env.PORT;
     /* app.listen(PORT); */
     https
       .createServer({ key: privateKey, cert: certificate }, app)
-      .listen(PORT, () => {
-        console.log("Server running on https://localhost:", PORT);
-      });
+      
   })
   .catch((err) => {
     console.log(err);

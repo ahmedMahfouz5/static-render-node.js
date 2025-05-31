@@ -20,8 +20,8 @@ const admin = require("./routes/admin"); // order of importing doesn't matter
 
 // session
 const session = require("express-session");
-const MongoDBStore = require("connect-mongodb-session")(session);
-const store = new MongoDBStore({ uri: mongodb_URL, collection: "sessions" });
+//const MongoDBStore = require("connect-mongodb-session")(session);
+//const store = new MongoDBStore({ uri: mongodb_URL, collection: "sessions" });
 
 //connect-flash
 const flash = require("connect-flash");

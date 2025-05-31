@@ -161,9 +161,10 @@ const privateKey = fs.readFileSync("server.key", "utf8");
 const certificate = fs.readFileSync("server.cert", "utf8");
 
 const PORT = process.env.PORT;
-mongoose
+/*mongoose
   .connect(mongodb_URL)
-  .then((result) => {
+
+  .then((result) => {*/
     /* app.listen(PORT); */
     https
       .createServer({ key: privateKey, cert: certificate }, app)

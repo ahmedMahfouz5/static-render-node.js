@@ -1,3 +1,7 @@
+// env file
+require("dotenv").config();
+const helmet = require("helmet");
+const https = require("https");
 const express = require("express");
 const app = express();
 const path = require("path");
@@ -8,8 +12,7 @@ app.set("views", "views");
 
 // Data Base
 const mongoose = require("mongoose");
-const mongodb_URL =
-  "mongodb+srv://ahmedmongo:rD=,98Hf^4umZQ}&>@cluster0.arm5u.mongodb.net/shop?retryWrites=true&w=majority&appName=Cluster0";
+const mongodb_URL = process.env.MONGO_URL;
 
 const User = require("./models/user.js");
 
@@ -17,8 +20,8 @@ const admin = require("./routes/admin"); // order of importing doesn't matter
 
 // session
 const session = require("express-session");
-const MongoDBStore = require("connect-mongodb-session")(session);
-const store = new MongoDBStore({ uri: mongodb_URL, collection: "sessions" });
+//const MongoDBStore = require("connect-mongodb-session")(session);
+//const store = new MongoDBStore({ uri: mongodb_URL, collection: "sessions" });
 
 //connect-flash
 const flash = require("connect-flash");
@@ -60,6 +63,19 @@ const fileFilter = (req, file, cb) => {
     cb(null, false);
   }
 };
+app.use(helmet());
+
+//Compression
+const compression = require("compression");
+app.use(compression());
+//Request Logging
+const fs = require("fs");
+const accessLogStream = fs.createWriteStream(
+  path.join(__dirname, "access.log"),
+  { flags: "a" }
+);
+const morgan = require("morgan");
+app.use(morgan("combined", { stream: accessLogStream }));
 
 // Initialize Multer middleware
 app.use(
@@ -140,20 +156,26 @@ app.use((error, req, res, next) => {
   });
 });
 debug("");
-mongoose
+
+const privateKey = fs.readFileSync("server.key", "utf8");
+const certificate = fs.readFileSync("server.cert", "utf8");
+
+const PORT = process.env.PORT;
+
+app.listen(PORT, () => {
+        console.log("Server running on https://localhost:", PORT);
+      });
+
+/*mongoose
   .connect(mongodb_URL)
-  .then((result) => {
-    app.listen(3000);
+
+  .then((result) => {*/
+    /* app.listen(PORT); 
+    https
+      .createServer({ key: privateKey, cert: certificate }, app)
+      
   })
   .catch((err) => {
     console.log(err);
   });
-
-/* 
-
-rD=,98Hf^4umZQ}&>
-
-
-mongodb+srv://ahmedmongo:rD=,98Hf^4umZQ}&>@cluster0.arm5u.mongodb.net/
-
 */
